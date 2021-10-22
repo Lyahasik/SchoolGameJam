@@ -30,15 +30,15 @@ public class GameManager : MonoBehaviour
         {
             _indexColor = indexColor;
             
-            OffColiisionGreen();
-            OnColiisionRed();
+            OnColiisionGreen();
+            OffColiisionRed();
         }
         else if (indexColor == 2)
         {
             _indexColor = indexColor;
             
-            OnColiisionGreen();
-            OffColiisionRed();
+            OffColiisionGreen();
+            OnColiisionRed();
         }
     }
     
