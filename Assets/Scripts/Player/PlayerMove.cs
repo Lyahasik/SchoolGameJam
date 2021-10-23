@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -9,10 +10,9 @@ public class PlayerMove : MonoBehaviour
 {
     public float Speed = 10.0f;
     public float SpeedRotate = 5.0f;
-    public float ForceJump = 10.0f;
-    public float Gravity = -9.0f;
+    public float ForceJump = 250.0f;
 
-    private CharacterController _characterController;
+    private Rigidbody _rb;
     private Vector3 _vectorMove;
     private float _valueJump;
     private bool _isGrounded;
@@ -21,34 +21,24 @@ public class PlayerMove : MonoBehaviour
     
     void Start()
     {
+        _rb = GetComponent<Rigidbody>();
         _vectorMove = Vector3.zero;
-        _characterController = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-        Drop();
         InputKey();
-        Move();
     }
-    
-    void Drop()
+
+    private void FixedUpdate()
     {
-        _isGrounded = _characterController.isGrounded;
-        _valueJump -= Gravity * Time.deltaTime;
-        
-        if (_isGrounded && _valueJump < 0.0f)
-        {
-            _valueJump = -Gravity * Time.deltaTime;
-        }
+        Move();
     }
 
     void InputKey()
     {
-        _vectorMove = transform.forward * Input.GetAxis("Vertical") * Speed;
-        _vectorMove += transform.right * Input.GetAxis("Horizontal") * Speed;
-
-        if (Input.GetKeyDown("space"))
+        if (Physics.Raycast(_rb.position, Vector3.down, 1.1f)
+            && Input.GetKeyDown("space"))
         {
             Jump();
         }
@@ -56,21 +46,21 @@ public class PlayerMove : MonoBehaviour
 
     void Jump()
     {
-        if (_isGrounded)
-        {
-            _valueJump += ForceJump;
-        }
+        _rb.AddForce(Vector3.up * ForceJump);
     }
 
     void Move()
     {
         RotationAxis();
-        _vectorMove.y = _valueJump;
-        _characterController.Move(_vectorMove * Time.deltaTime);
+        
+        _vectorMove = transform.forward * Input.GetAxis("Vertical") * Speed;
+        _vectorMove += transform.right * Input.GetAxis("Horizontal") * Speed;
+        
+        _rb.MovePosition(_rb.position + _vectorMove * Time.deltaTime);
     }
 
     void RotationAxis()
     {
-        transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * SpeedRotate, Space.World);
+        _rb.MoveRotation(_rb.rotation * Quaternion.Euler(0.0f, Input.GetAxis("Mouse X") * SpeedRotate, 0.0f));
     }
 }

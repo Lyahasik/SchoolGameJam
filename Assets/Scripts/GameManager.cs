@@ -10,11 +10,8 @@ public class GameManager : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-    }
 
-    void Update()
-    {
-        
+        ChangeCollision(0);
     }
 
     public void ChangeCollision(int indexColor)
@@ -23,8 +20,8 @@ public class GameManager : MonoBehaviour
         {
             _indexColor = 0;
             
-            OnColiisionGreen();
-            OnColiisionRed();
+            OffColiisionGreen();
+            OffColiisionRed();
         }
         else if (indexColor == 1)
         {

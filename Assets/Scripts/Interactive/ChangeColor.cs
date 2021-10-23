@@ -24,8 +24,6 @@ public class ChangeColor : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("TriggerChangeColor");
-            
             other.GetComponent<PlayerStats>().ChangeColor((int)PlayerColor);
             GameManager.ChangeCollision((int)PlayerColor);
         }
