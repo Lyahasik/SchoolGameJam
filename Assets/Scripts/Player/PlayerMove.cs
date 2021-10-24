@@ -12,6 +12,9 @@ public class PlayerMove : MonoBehaviour
     public float SpeedRotate = 5.0f;
     public float ForceJump = 250.0f;
 
+    public GameObject Model;
+
+    private Animator _animator;
     private Rigidbody _rb;
     private Vector3 _vectorMove;
     private float _valueJump;
@@ -21,6 +24,7 @@ public class PlayerMove : MonoBehaviour
     
     void Start()
     {
+        _animator = Model.GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
         _vectorMove = Vector3.zero;
     }
@@ -37,16 +41,27 @@ public class PlayerMove : MonoBehaviour
 
     void InputKey()
     {
-        if (Physics.Raycast(_rb.position, Vector3.down, 1.1f)
-            && Input.GetKeyDown("space"))
+        if (Physics.Raycast(_rb.position, Vector3.down, 1.01f))
         {
-            Jump();
+            _animator.SetBool("Ground", true);
+            
+            if (Input.GetKeyDown("space"))
+            {
+                Jump();
+            }
         }
     }
 
     void Jump()
     {
+        Invoke("OffGround", 1.0f);
+        _animator.SetTrigger("Jump");
         _rb.AddForce(Vector3.up * ForceJump);
+    }
+
+    void OffGround()
+    {
+        _animator.SetBool("Ground", false);
     }
 
     void Move()
@@ -56,6 +71,8 @@ public class PlayerMove : MonoBehaviour
         _vectorMove = transform.forward * Input.GetAxis("Vertical") * Speed;
         _vectorMove += transform.right * Input.GetAxis("Horizontal") * Speed;
         
+        _animator.SetFloat("Z", Input.GetAxis("Vertical"));
+        _animator.SetFloat("X", Input.GetAxis("Horizontal"));
         _rb.MovePosition(_rb.position + _vectorMove * Time.deltaTime);
     }
 

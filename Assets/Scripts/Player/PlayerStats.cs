@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    public GameObject ModelMesh;
     public List<Material> Colors;
     
     private int _indexColor = 0;
+    private Renderer _rendererModel;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        _rendererModel = ModelMesh.GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -26,13 +28,13 @@ public class PlayerStats : MonoBehaviour
         {
             _indexColor = 0;
             
-            GetComponent<Renderer>().material = Colors[0];
+            _rendererModel.material = Colors[0];
         }
         else
         {
             _indexColor = indexColor;
             
-            GetComponent<Renderer>().material = Colors[indexColor];
+            _rendererModel.material = Colors[indexColor];
         }
     }
 }
