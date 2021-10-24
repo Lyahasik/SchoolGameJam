@@ -1,1 +1,1 @@
-# запустить игру можно по удресу lyahasik.github.io
+запустить игру можно по адресу https://lyahasik.github.io/
